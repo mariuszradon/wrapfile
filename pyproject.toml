@@ -1,0 +1,29 @@
+[project]
+name = "wrapfile"
+dynamic = ["version"]
+description = "Wrappers for file-like objects"
+authors = [
+    {name = "Mariusz Radon", email = "mariusz.radon@uj.edu.pl"},
+]
+dependencies = []
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "scm"
+
+[dependency-groups]
+test = [
+    "pytest>=8.3.4",
+]
+dev = [
+    "ipython>=8.12.3",
+]
