@@ -19,12 +19,25 @@ def test_wrapfile():
             test2 = buf2.read()
 
     tf.close()
-    os.remove(tf_name)
     
     assert test1 == test2
     assert test1 == DATA
     assert buf1.closed
     assert buf2.closed
 
+    # test when file is closed
+    with open(tf_name, 'r') as f:
+        with wrapfile(f, 'r') as buf:
+            assert buf.read() == DATA
+        assert not f.closed
+    assert f.closed
 
-    
+    # test if wrapper has all the attributes
+    # of the original file
+    with open(tf_name, 'r') as f:
+        with wrapfile(f, 'r') as buf:
+            for name in dir(f):
+                assert hasattr(buf, name)
+
+    os.remove(tf_name)
+
