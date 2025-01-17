@@ -1,4 +1,4 @@
-class WrapFile:
+class FileWrapper:
     """File wrapper
     """
     def __init__(self, arg, /, mode):
@@ -27,5 +27,5 @@ class WrapFile:
 
 
 def wrapfile(arg, /, mode):
-    return WrapFile(arg, mode)
+    return FileWrapper(arg, mode)
 
