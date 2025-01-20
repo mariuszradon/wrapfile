@@ -1,43 +1,55 @@
-from wrapfile import wrapfile
+from wrapfile import TextFileReader, TextFileWriter, FileWrapper
 import tempfile
 import os
 
-def test_wrapfile():
-    # create some tempfile and write in some data
+def test_file_writer_and_reader():
+    """Test TextFileWriter and TextFileReader
+    """
     DATA="ndht5433\nC44nhcx 44dmnhn4\n\nkjnh43uyx 4%54x"
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as tf:
         tf.write(DATA)
-        tf_name = tf.name
+    tfpath = tf.name
 
-    # open this file by providing its name
-    with wrapfile(tf_name, 'r') as buf1:
-        test1 = buf1.read()
+    # writer, arg is path
+    with TextFileWriter(tfpath) as w:
+        w.write(DATA)
+    assert w.closed
+    with open(tfpath, 'r') as f:
+        assert f.read() == DATA
 
-    # open this file by providing file object
-    with open(tf_name, 'r') as f:
-        with wrapfile(f, 'r') as buf2:
-            test2 = buf2.read()
-
-    tf.close()
-    
-    assert test1 == test2
-    assert test1 == DATA
-    assert buf1.closed
-    assert buf2.closed
-
-    # test when file is closed
-    with open(tf_name, 'r') as f:
-        with wrapfile(f, 'r') as buf:
-            assert buf.read() == DATA
+    # writer, arg is file
+    with open(tfpath, 'w') as f:
+        with TextFileWriter(f) as w:
+            w.write(DATA)
+        assert not w.closed
         assert not f.closed
+        assert w.actual_file == f
+    assert w.closed
     assert f.closed
 
-    # test if wrapper has all the attributes
-    # of the original file
-    with open(tf_name, 'r') as f:
-        with wrapfile(f, 'r') as buf:
+    # reader, arg is path
+    with TextFileReader(tfpath) as r:
+        t = r.read()
+    assert r.closed
+    assert t == DATA
+
+    # reader, arg is file
+    with open(tfpath, 'r') as f:
+        with TextFileReader(f) as r:
+            t = r.read()
+        assert not r.closed
+        assert not f.closed
+    assert r.closed
+    assert f.closed
+    assert t == DATA
+
+    os.remove(tfpath)
+
+def test_attributes():
+    """Test if wrapper has all attributes of the original file
+    """
+    with tempfile.TemporaryFile() as f:
+        with FileWrapper(f, 'r') as buf:
             for name in dir(f):
                 assert hasattr(buf, name)
-
-    os.remove(tf_name)
 

@@ -5,4 +5,4 @@ except PackageNotFoundError:
     # package is not installed
     pass
 
-from .wrapfile import FileWrapper, wrapfile
+from .wrapfile import FileWrapper, TextFileReader, TextFileWriter, wrapfile

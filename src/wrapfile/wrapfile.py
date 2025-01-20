@@ -25,6 +25,13 @@ class FileWrapper:
     def __getattr__(self, name):
         return getattr(self.actual_file, name)
 
+class TextFileReader(FileWrapper):
+    def __init__(self, arg, /):
+        super().__init__(arg, 'r')
+
+class TextFileWriter(FileWrapper):
+    def __init__(self, arg, /):
+        super().__init__(arg, 'w')
 
 def wrapfile(arg, /, mode):
     return FileWrapper(arg, mode)
