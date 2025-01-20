@@ -2,16 +2,18 @@ from wrapfile import TextFileReader, TextFileWriter, FileWrapper
 import tempfile
 import os
 
+DATA="ndht5433\nC44nhcx 44dmnhn4\n\nkjnh43uyx 4%54x"
+
 def test_file_writer_and_reader():
     """Test TextFileWriter and TextFileReader
     """
-    DATA="ndht5433\nC44nhcx 44dmnhn4\n\nkjnh43uyx 4%54x"
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as tf:
         tf.write(DATA)
     tfpath = tf.name
 
     # writer, arg is path
     with TextFileWriter(tfpath) as w:
+        assert not w.has_value
         w.write(DATA)
     assert w.closed
     with open(tfpath, 'r') as f:
@@ -20,6 +22,7 @@ def test_file_writer_and_reader():
     # writer, arg is file
     with open(tfpath, 'w') as f:
         with TextFileWriter(f) as w:
+            assert not w.has_value
             w.write(DATA)
         assert not w.closed
         assert not f.closed
@@ -29,6 +32,7 @@ def test_file_writer_and_reader():
 
     # reader, arg is path
     with TextFileReader(tfpath) as r:
+        assert not r.has_value
         t = r.read()
     assert r.closed
     assert t == DATA
@@ -36,6 +40,7 @@ def test_file_writer_and_reader():
     # reader, arg is file
     with open(tfpath, 'r') as f:
         with TextFileReader(f) as r:
+            assert not r.has_value
             t = r.read()
         assert not r.closed
         assert not f.closed
@@ -44,6 +49,14 @@ def test_file_writer_and_reader():
     assert t == DATA
 
     os.remove(tfpath)
+
+def test_strbuf():
+    """Test string buffer functionality
+    """
+    with TextFileWriter() as w:
+        w.write(DATA)
+        assert w.has_value
+        assert w.getvalue() == DATA
 
 def test_attributes():
     """Test if wrapper has all attributes of the original file

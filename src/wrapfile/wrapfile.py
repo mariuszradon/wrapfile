@@ -1,15 +1,23 @@
+import io
+
 class FileWrapper:
     """File wrapper
     """
-    def __init__(self, arg, /, mode):
+    def __init__(self, arg=None, /, mode=None):
 
-        # is arg file-like or path-like?
-        if hasattr(arg, "fileno"):
+        # is arg None, file-like or path-like?
+        if arg is None:
+            self.actual_file = io.StringIO()
+            self.should_close = True
+            self.has_value = True
+        elif hasattr(arg, "fileno"):
             self.actual_file = arg
             self.should_close = False
+            self.has_value = False
         else:
             self.actual_file = open(arg, mode)
             self.should_close = True
+            self.has_value = False
 
     def close(self):
         if self.should_close:
@@ -30,7 +38,7 @@ class TextFileReader(FileWrapper):
         super().__init__(arg, 'r')
 
 class TextFileWriter(FileWrapper):
-    def __init__(self, arg, /):
+    def __init__(self, arg=None, /):
         super().__init__(arg, 'w')
 
 def wrapfile(arg, /, mode):
