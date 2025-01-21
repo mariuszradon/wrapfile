@@ -4,7 +4,7 @@ import os
 class FileWrapper:
     """File wrapper
     """
-    def __init__(self, filepath_or_buffer=None, /, mode=None):
+    def __init__(self, filepath_or_buffer, /, mode='r'):
         """Construct file wrapper based on filepath or buffer
 
         Parameters:
