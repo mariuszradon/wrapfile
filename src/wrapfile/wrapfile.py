@@ -1,5 +1,6 @@
 import io
 import os
+import gzip
 from .error import WrapFileValueError
 
 class FileWrapper:
@@ -12,6 +13,8 @@ class FileWrapper:
         -----------
         filepath_or_buffer: str, path or file-like object
              actual file or a path to it.
+             If the path is provided, the actual file will opened
+             using open() or gzip.open() if the path endswith '.gz'.
              For the special value None, an in-memory buffer will be
              opened, to which the data can be written.
              Depending on the value of mode, this in-memory buffer 
@@ -20,9 +23,9 @@ class FileWrapper:
 
         mode : str, optional
              the mode in which the file will be opened if needed
-             using open(). If default to 'r'.
+             using open(). If default to 'w'.
              If the argument is a file-like object, the argument
-             mode is not used; in particular, there is no check
+             mode is ignored; in particular, there is no check
              if the file has been opened in the appropriate mode.
         """
         # is filepath_or_buffer None, file-like or path-like?
@@ -41,7 +44,12 @@ class FileWrapper:
             self.should_close = False
         else:
             name, ext = os.path.splitext(filepath_or_buffer)
-            self.actual_file = open(filepath_or_buffer, mode)
+            if ext == '.gz':
+                self.actual_file = gzip.open(
+                    filepath_or_buffer, mode
+                )
+            else:
+                self.actual_file = open(filepath_or_buffer, mode)
             self.should_close = True
 
     def close(self):

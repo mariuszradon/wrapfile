@@ -2,6 +2,8 @@ from wrapfile import TextFileReader, TextFileWriter, FileWrapper
 from wrapfile.error import WrapFileValueError
 import tempfile
 import os
+import pathlib
+import gzip
 
 DATA="ndht5433\nC44nhcx 44dmnhn4\n\nkjnh43uyx 4%54x"
 
@@ -50,6 +52,53 @@ def test_file_writer_and_reader():
     assert t == DATA
 
     os.remove(tfpath)
+
+def test_file_writer_and_reader_gz():
+    """Test writer and reader for gzip-compressed files
+    """
+    tempdir = pathlib.Path(tempfile.mkdtemp())
+    tfpath = tempdir / 'test.txt.gz'
+
+    # writer, arg is path
+    with TextFileWriter(tfpath) as w:
+        w.write(DATA)
+        assert w.getvalue() is None
+    assert w.closed
+    with gzip.open(tfpath, 'rt') as f:
+        assert f.read() == DATA
+
+    # writer, arg is file
+    with gzip.open(tfpath, 'wt') as f:
+        with TextFileWriter(f) as w:
+            w.write(DATA)
+            assert w.getvalue() is None
+        assert not w.closed
+        assert not f.closed
+        assert w.actual_file == f
+    assert w.closed
+    assert f.closed
+
+    # reader, arg is path
+    with TextFileReader(tfpath) as r:
+        assert not hasattr(r, "getvalue")
+        t = r.read()
+    assert r.closed
+    assert t == DATA
+
+    # reader, arg is file
+    with gzip.open(tfpath, 'rt') as f:
+        with TextFileReader(f) as r:
+            assert not hasattr(r, "getvalue")
+            t = r.read()
+        assert not r.closed
+        assert not f.closed
+    assert r.closed
+    assert f.closed
+    assert t == DATA
+
+    tfpath.unlink()
+    tempdir.rmdir()
+
 
 def test_strbuf():
     """Test string buffer functionality
