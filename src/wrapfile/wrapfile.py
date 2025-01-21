@@ -67,7 +67,13 @@ class FileWrapper:
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.close()
         return False
-    
+
+    def __iter__(self):
+        return self.actual_file
+
+    def __next__(self):
+        return next(self.actual_file)
+
     def __getattr__(self, name):
         return getattr(self.actual_file, name)
 
