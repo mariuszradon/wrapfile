@@ -1,27 +1,29 @@
 # wrapfile
 
-FileWrapper, TextFileReader and TextFileWriter are used to construct a
-file-like object from a file-like object, a path or None (to indicate
-a memory buffer). The resulting wrapper redirects most of the methods
-to the actual file object. The close() method of the wrapper closes
-the actual file only when it was opened when constructing the wrapper
-(based on the provided file path) or if the memory buffer was created.
+Create a file-like wrapper based on the actual file or a path to it,
+or an internal memory buffer (whose contents can be returned).  
 
-The purpose is to simplify writing functions that can take as an
-argument a 'filepath_or_buffer' which can be string, path object, a
-file-like object or None:
+The purpose is to simplify coding functions with a
+'filepath_or_buffer' argument meaning that what is supplied as the
+argument can be a file-like object, str or path object, or even None
+(for writing data to an internal memory buffer).
 
 - If the argument is file-like, it is simply wrapped to perform the
-actual I/O operations.
+  actual I/O operations.
 
 - If the argument is str or path object, it is treated as path of the
-file to be opened and managed (the user does not have to bother about
-closing the internal file).
+  file to be opened and managed (the user does not have to bother
+  about closing the internal file).
 
 - If the argument None, an empty in-memory buffer is created
-(io.BytesIO or io.StringIO) to which data can be written. The written
-data can be returned back using the getvalue() implemented in
-TextFileWriter.
+  (io.BytesIO or io.StringIO) to which data can be written. The
+  written data can be returned back using the getvalue() implemented
+  in one of the classes, TextFileWriter.
+
+The resulting wrapper redirects most of the methods to the actual file
+object. The close() method of the wrapper closes the actual file only
+when it was opened when constructing the wrapper (based on the
+provided file path) or if the memory buffer was created.
 
 ##Example
 ```python
