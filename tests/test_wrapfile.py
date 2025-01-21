@@ -13,8 +13,8 @@ def test_file_writer_and_reader():
 
     # writer, arg is path
     with TextFileWriter(tfpath) as w:
-        assert not w.has_value
         w.write(DATA)
+        assert w.getvalue() is None
     assert w.closed
     with open(tfpath, 'r') as f:
         assert f.read() == DATA
@@ -22,8 +22,8 @@ def test_file_writer_and_reader():
     # writer, arg is file
     with open(tfpath, 'w') as f:
         with TextFileWriter(f) as w:
-            assert not w.has_value
             w.write(DATA)
+            assert w.getvalue() is None
         assert not w.closed
         assert not f.closed
         assert w.actual_file == f
@@ -32,7 +32,7 @@ def test_file_writer_and_reader():
 
     # reader, arg is path
     with TextFileReader(tfpath) as r:
-        assert not r.has_value
+        assert not hasattr(r, "getvalue")
         t = r.read()
     assert r.closed
     assert t == DATA
@@ -40,7 +40,7 @@ def test_file_writer_and_reader():
     # reader, arg is file
     with open(tfpath, 'r') as f:
         with TextFileReader(f) as r:
-            assert not r.has_value
+            assert not hasattr(r, "getvalue")
             t = r.read()
         assert not r.closed
         assert not f.closed
@@ -53,9 +53,8 @@ def test_file_writer_and_reader():
 def test_strbuf():
     """Test string buffer functionality
     """
-    with TextFileWriter() as w:
+    with TextFileWriter(None) as w:
         w.write(DATA)
-        assert w.has_value
         assert w.getvalue() == DATA
 
 def test_attributes():
