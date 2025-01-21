@@ -25,7 +25,7 @@ object. The close() method of the wrapper closes the actual file only
 when it was opened when constructing the wrapper (based on the
 provided file path) or if the in-memory buffer was created.
 
-##Example
+## Example
 ```python
 from wrapfile import TextFileWriter
 def say_hello(filepath_or_buffer=None):
