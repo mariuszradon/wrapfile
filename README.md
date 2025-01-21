@@ -1,12 +1,12 @@
 # wrapfile
 
 Create a file-like wrapper based on the actual file or a path to it,
-or an internal memory buffer (whose contents can be returned).  
+or an internal memory buffer (whose contents can be returned).
 
 The purpose is to simplify coding functions with a
 'filepath_or_buffer' argument meaning that what is supplied as the
 argument can be a file-like object, str or path object, or even None
-(for writing data to an internal memory buffer).
+(for writing data to an in-memory buffer).
 
 - If the argument is file-like, it is simply wrapped to perform the
   actual I/O operations.
@@ -23,7 +23,7 @@ argument can be a file-like object, str or path object, or even None
 The resulting wrapper redirects most of the methods to the actual file
 object. The close() method of the wrapper closes the actual file only
 when it was opened when constructing the wrapper (based on the
-provided file path) or if the memory buffer was created.
+provided file path) or if the in-memory buffer was created.
 
 ##Example
 ```python

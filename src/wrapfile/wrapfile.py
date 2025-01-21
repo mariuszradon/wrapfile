@@ -72,13 +72,14 @@ class TextFileWriter(FileWrapper):
         super().__init__(filepath_or_buffer, 'wt')
 
     def getvalue(self):
-        """Contents written to the memory buffer or None
+        """Contents written to the in-memory buffer or None
 
         Returns:
         --------
         str or None:
-            contents written to the memory buffer
-            or None if there was no memory buffer.
+            contents written to the in-memory buffer
+            or None if no in-memory buffer has been created
+            by this instance.
         """
         if hasattr(self.actual_file, "getvalue"):
             return self.actual_file.getvalue()
