@@ -1,4 +1,5 @@
 from wrapfile import TextFileReader, TextFileWriter, FileWrapper
+from wrapfile.error import WrapFileValueError
 import tempfile
 import os
 
@@ -65,3 +66,19 @@ def test_attributes():
             for name in dir(f):
                 assert hasattr(buf, name)
 
+
+def test_inmemory_mode():
+    """Test if in-memory buffer can be created with a specified mode
+    """
+    def ok(mode):
+        try:
+            with FileWrapper(None, mode) as f:
+                return True
+        except WrapFileValueError:
+            return False
+    assert ok('w')
+    assert ok('wt')
+    assert ok('wb')
+    assert not ok('r')
+    assert not ok('rt')
+    assert not ok('rb')
