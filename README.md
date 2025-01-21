@@ -1,7 +1,7 @@
 # wrapfile
 
 Create a file-like wrapper based on the actual file or a path to it,
-or an internal memory buffer (whose contents can be returned).
+or an internal memory buffer.
 
 The purpose is to simplify coding functions with a
 'filepath_or_buffer' argument meaning that what is supplied as the
