@@ -52,6 +52,9 @@ class FileWrapper:
                 self.actual_file = open(filepath_or_buffer, mode)
             self.should_close = True
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}({repr(self.actual_file)})'
+
     def close(self):
         """Close the file
 
